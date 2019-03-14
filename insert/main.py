@@ -1,6 +1,6 @@
 from insert import Insertion, MongoDB, SQL, Manage_Tables
 
-limiet=1000
+limiet=5
 
 data_list_products= MongoDB.get_data('products', limiet)
 data_list_sessions= MongoDB.get_data('sessions', limiet)

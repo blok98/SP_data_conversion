@@ -27,7 +27,6 @@ def get_popularProducts(expiration_date,limiet):        #haalt json-info van pop
     list=[]
     recommendation_list=select_popularProducts(expiration_date,limiet)
     for i in recommendation_list:
-        print('id:::',i)
         id = str(i)
         cursor= MongoDB.get_database('products', 9999999999, {"_id":id})
         product = next(cursor, None)

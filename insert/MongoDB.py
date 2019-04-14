@@ -9,6 +9,7 @@ def get_database(coll,limiet, query={}):
     data = collection_student.find(query).limit(limiet)
     return data
 
+#count_value is used for data analysis
 def count_value(coll,query={}):
     client = MongoClient('mongodb://localhost:27017')
     db = client['voordeelshop']
@@ -16,6 +17,7 @@ def count_value(coll,query={}):
     data = collection_student.find(query).count()
     return data
 
+#distinct_values is used for data anlysis
 def distinct_values(coll,query={}):
     client = MongoClient('mongodb://localhost:27017')
     db = client['voordeelshop']

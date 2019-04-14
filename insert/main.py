@@ -1,6 +1,6 @@
 from insert import Insertion, MongoDB, SQL, Manage_Tables
 
-limiet=10000
+limiet=10000 #gaat erg lang duren vanaf limiet=1000. Op het moment zijn er 10.000 producten/sessies en visitors in SQL geladen
 
 safety=input('are you sure you want to restart the insertion? ')
 if safety=='ja' or safety=='yes':
@@ -47,10 +47,6 @@ Manage_Tables.create_table(conn, 'recommendation', recommendation_attributes, pr
 Manage_Tables.create_table(conn, 'similar_product', similar_product_attributes, primary_key='v_id,p_id', foreign_key={'v_id': 'recommendation(_id)'})
 Manage_Tables.create_table(conn, 'order_products', order_products_attributes, primary_key='product_id,session_id', foreign_key={'product_id': 'products(_id)', 'session_id': 'sessions(_id)'})
 print('\n')
-
-# Insertion.insertion_products(conn, data_list_products)
-# Insertion.insertion_visitors(conn, data_list_visitors)
-# Insertion.insertion_sessions(conn, data_list_sessions)
 
 
 Insertion.newInsertion_products(conn, coll1='products', coll2='stock', data_input=data_list_products, attributes=products_attributes, attributes2=stock_attributes, fk='_id')

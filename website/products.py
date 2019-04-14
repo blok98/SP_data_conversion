@@ -2,8 +2,8 @@ from website import recommendation
 from insert import SQL
 
 
-def getPopularProducts(limiet):
-    return recommendation.get_popularProducts(limiet)
+def getPopularProducts(expiration_date,limiet):
+    return recommendation.get_popularProducts(expiration_date,limiet)
 
 def getPersonalProducts(session,limiet):
     print("Recommendations for session: {}".format(session['_id']))

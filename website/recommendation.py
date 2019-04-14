@@ -7,27 +7,28 @@ from statistics import mode
 conn              = SQL.connect('postgres', 'toegang', 'Tom-1998', '127.0.0.1')
 
 #POPULAR
-def select_popularProducts(expiration_date,limiet):
-    # qry0="SELECT _id from products WHERE price in (" \
-    #     "SELECT max(price)" \
-    #     "FROM products)" \
-    #     "LIMIT {};".format(3)
-
-    qry="""select order_products.product_id, session_id, session_start
+def select_popularProducts(expiration_date,limiet):         #haalt alle populaire product id's uit de SQL database die gekocht zijn na ..
+    qry="""select order_products.product_id,count(order_products.product_id) as aantal
             from order_products
             inner join products on products._id=order_products.product_id
             inner join sessions on order_products.session_id=sessions._id
-            where sessions.session_start>'{}' limit{};""".format(expiration_date,limiet)
+            where sessions.session_start>'{}'
+            group by order_products.product_id
+            order by aantal DESC limit {};""".format(expiration_date,limiet)
     cursor=conn.cursor()
     cursor.execute(qry)
     res=cursor.fetchall()
-    return res
+    populair_id=[]
+    for id in res:
+        populair_id.append(id[0])
+    return populair_id
 
-def get_popularProducts(limiet):
+def get_popularProducts(expiration_date,limiet):        #haalt json-info van populaire producten uit mongodb om te tonen op website
     list=[]
-    recommendation_list=select_popularProducts(limiet)
+    recommendation_list=select_popularProducts(expiration_date,limiet)
     for i in recommendation_list:
-        id = str(i[0])
+        print('id:::',i)
+        id = str(i)
         cursor= MongoDB.get_database('products', 9999999999, {"_id":id})
         product = next(cursor, None)
         list.append(product)
@@ -36,7 +37,7 @@ def get_popularProducts(limiet):
 
 
 # PERSONAL
-def select_ordered_products(visitor_id):
+def select_ordered_products(visitor_id):            #haalt alle gekochte producten van opgegeven visitor uit SQL database
     qry="""select order_products.product_id from visitors 
             inner join visitors_buids on visitors_buids._id=visitors._id
             inner join sessions on sessions.buid=visitors_buids.buid
@@ -53,12 +54,10 @@ def select_ordered_products(visitor_id):
     print('ordered products',ordered_products)
     return ordered_products
 
-def make_idealProduct(visitor_id):
+def make_idealProduct(visitor_id):          #maakt het ideale product voor de visitor met de meest populaire categorien
     products=select_ordered_products(visitor_id)
     # products=['23978','7225','29438','16121']
-
     product_specs=[]
-
     most_common_categories=[]
     for product in products:
         qry="""select sub_category,sub_sub_category,brand,price from products where _id='{}'""".format(product)
@@ -79,7 +78,7 @@ def make_idealProduct(visitor_id):
 
     return most_common_categories,products
 
-def select_similar_products(limiet,visitor_id):
+def select_similar_products(limiet,visitor_id):         #kiest producten uit SQL die zelfde eigenschappen hebben als ideaal product
     idealProduct,ordered_products=make_idealProduct(visitor_id)
     qry="""select * from products
           where sub_category='{}' 
@@ -100,7 +99,7 @@ def select_similar_products(limiet,visitor_id):
 
     return personal_product_id
 
-def get_personalProducts(limiet,visitor_id):
+def get_personalProducts(limiet,visitor_id):                #haalt json-info van similar products uit MongoDB om te tonen op website
     personal_product_id=select_similar_products(limiet,visitor_id)
     personal_products=[]
     for product_id in personal_product_id:

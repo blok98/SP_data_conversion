@@ -3,7 +3,7 @@ from insert import SQL
 
 
 def getPopularProducts(limiet):
-    return recommendation.get_info_popularProducts(limiet)
+    return recommendation.get_popularProducts(limiet)
 
     # return [
     #     { "_id": "23978", "brand": "8x4", "category": "Gezond & verzorging", "deeplink": "https://www.opisopvoordeelshop.nl/8x4-men-men-beast-deospray-150ml" },
@@ -14,10 +14,12 @@ def getPopularProducts(limiet):
     #     { "_id": "22309", "brand": "Agfa", "category": "Elektronica & media", "deeplink": "https://www.opisopvoordeelshop.nl/afgaphoto-alkaline-power-batterijen-aa-4-stuks"}
     # ]
 
-def getPersonalProducts(session):
+def getPersonalProducts(session,limiet):
     print("Recommendations for session: {}".format(session['_id']))
+    visitor_id=session['_id']
+    return recommendation.get_personalProducts(limiet,visitor_id)
 
-    return [
-        {"_id": "23978", "brand": "8x4", "category": "Gezond & verzorging", "deeplink": "https://www.opisopvoordeelshop.nl/8x4-men-men-beast-deospray-150ml"},
-        {"_id": "22309", "brand": "Agfa", "category": "Elektronica & media", "deeplink": "https://www.opisopvoordeelshop.nl/afgaphoto-alkaline-power-batterijen-aa-4-stuks"}
-    ]
+    # return [
+    #     {"_id": "23978", "brand": "8x4", "category": "Gezond & verzorging", "deeplink": "https://www.opisopvoordeelshop.nl/8x4-men-men-beast-deospray-150ml"},
+    #     {"_id": "22309", "brand": "Agfa", "category": "Elektronica & media", "deeplink": "https://www.opisopvoordeelshop.nl/afgaphoto-alkaline-power-batterijen-aa-4-stuks"}
+    # ]

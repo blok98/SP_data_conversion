@@ -17,4 +17,3 @@ def sqlexecute(conn,sql,on_conflict):
 def delete_record(conn,table,constraint):
     sql="DELETE FROM {} WHERE {}".format(table,constraint)
     sqlexecute(conn,sql)
-

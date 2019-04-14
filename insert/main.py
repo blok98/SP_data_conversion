@@ -1,6 +1,8 @@
 from insert import Insertion, MongoDB, SQL, Manage_Tables
 
-limiet=5
+limiet=1000
+
+
 
 data_list_products= MongoDB.get_data('products', limiet)
 data_list_sessions= MongoDB.get_data('sessions', limiet)
@@ -9,9 +11,6 @@ data_list_visitors= MongoDB.get_data('visitors', limiet)
 conn              = SQL.connect('postgres', 'toegang', 'Tom-1998', '127.0.0.1')
 cursor            = conn.cursor()
 
-# cursor.execute("select * from information_schema.tables where table_name=%s", ('products',))
-# exist=bool(cursor.rowcount)
-# print('products',exist)
 
 Manage_Tables.drop_table(conn, 'similar_product')
 Manage_Tables.drop_table(conn, 'recommendation')

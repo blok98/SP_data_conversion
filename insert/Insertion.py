@@ -2,6 +2,10 @@ from insert import SQL, Modify
 
 
 def newInsertion_products(conn,coll1,coll2,data_input,attributes,attributes2,fk):
+    lengte=len(data_input)
+    bar='|        |'
+    bargrens=10
+    print(bar)
     count=0
     for datapoint in data_input:
         query = "INSERT INTO {} VALUES(".format(coll1)
@@ -23,6 +27,9 @@ def newInsertion_products(conn,coll1,coll2,data_input,attributes,attributes2,fk)
         SQL.sqlexecute(conn, query, on_conflict=False)
 
         insertion_stock(conn, coll2, datapoint, attributes2,fk, data_fk)
+        if (count/lengte)*100>bargrens:
+            bargrens+=10
+            print('*',end='')
 
 
 def insertion_stock(conn,coll,datapoint,attributes,fk,data_fk):

@@ -31,7 +31,6 @@ def newInsertion_products(conn,coll1,coll2,data_input,attributes,attributes2,fk)
             bargrens+=10
             print('*',end='')
 
-
 def insertion_stock(conn,coll,datapoint,attributes,fk,data_fk):
     data=datapoint['stock']
     for element in data:
@@ -104,7 +103,6 @@ def insertion_similar_product(conn,coll,datapoint,attributes,fk,data_fk):
         query= Modify.change_query(query, similar)
         query = query[:-1] +')'
         SQL.sqlexecute(conn, query, on_conflict=False)
-
 
 def newInsertion_sessions(conn,coll1,coll2,data_input,attributes,attributes2,fk):
     ignored_records = 0

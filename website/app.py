@@ -15,14 +15,14 @@ def download_file(filename):
 
 @app.route('/popularproducts')
 def popularproducts():
-    return jsonify(getPopularProducts(limiet=2))
+    return jsonify(getPopularProducts(expiration_date='2017-12-20',limiet=8))
 
 
 @app.route('/personalproducts', methods=['POST'])
 def personalproducts():
     sessiondata = request.json
     print(sessiondata)
-    return jsonify(getPersonalProducts(sessiondata,limiet=3))
+    return jsonify(getPersonalProducts(sessiondata,limiet=8))
 
 
 if __name__ == '__main__':

@@ -1,7 +1,12 @@
 from insert import Insertion, MongoDB, SQL, Manage_Tables
 
-limiet=1000
+limiet=10000
 
+safety=input('are you sure you want to restart the insertion? ')
+if safety=='ja' or safety=='yes':
+    print('make connection with db')
+else:
+    exit()
 
 
 data_list_products= MongoDB.get_data('products', limiet)
@@ -10,6 +15,7 @@ data_list_visitors= MongoDB.get_data('visitors', limiet)
 
 conn              = SQL.connect('postgres', 'toegang', 'Tom-1998', '127.0.0.1')
 cursor            = conn.cursor()
+
 
 
 Manage_Tables.drop_table(conn, 'similar_product')

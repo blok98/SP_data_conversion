@@ -2,21 +2,22 @@ from insert import MongoDB
 from insert import SQL
 from statistics import mode
 
+
+
 conn              = SQL.connect('postgres', 'toegang', 'Tom-1998', '127.0.0.1')
 
 #POPULAR
-def select_popularProducts(limiet):
+def select_popularProducts(expiration_date,limiet):
     # qry0="SELECT _id from products WHERE price in (" \
     #     "SELECT max(price)" \
     #     "FROM products)" \
     #     "LIMIT {};".format(3)
 
-    qry="""SELECT product_id 
-            FROM (SELECT product_id, 
-                    count(product_id) as num 
-                    FROM order_products 
-                    GROUP BY product_id ) as foo 
-            ORDER BY num DESC limit {};""".format(limiet)
+    qry="""select order_products.product_id, session_id, session_start
+            from order_products
+            inner join products on products._id=order_products.product_id
+            inner join sessions on order_products.session_id=sessions._id
+            where sessions.session_start>'{}' limit{};""".format(expiration_date,limiet)
     cursor=conn.cursor()
     cursor.execute(qry)
     res=cursor.fetchall()
@@ -40,15 +41,21 @@ def select_ordered_products(visitor_id):
             inner join visitors_buids on visitors_buids._id=visitors._id
             inner join sessions on sessions.buid=visitors_buids.buid
             inner join order_products on order_products.session_id=sessions._id
+            inner join products on products._id=order_products.product_id
             where visitors._id='{}' """.format(visitor_id)
     cursor=conn.cursor()
     cursor.execute(qry)
-    ordered_products=cursor.fetchall()
+    res=cursor.fetchall()
+    ordered_products=[]
+    for product in res:
+        product=product[0]
+        ordered_products.append(product)
+    print('ordered products',ordered_products)
     return ordered_products
 
 def make_idealProduct(visitor_id):
-    #products=select_ordered_products(visitor_id)
-    products=['23978','7225','29438','16121']
+    products=select_ordered_products(visitor_id)
+    # products=['23978','7225','29438','16121']
 
     product_specs=[]
 
